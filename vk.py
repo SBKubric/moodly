@@ -84,8 +84,32 @@ def check_pages(vk):
             f.write(f'{item}\n')
 
 
+def create_subscriptions_list(vk):
+    user_ids = []
+    with open('checked_pages.txt', 'r', encoding='utf-8') as f:
+        for line in f:
+            user_ids.append(line)
+    subscriptions_users = []
+    subscriptions_groups = []
+    i = 0
+    for id in user_ids[1:]:
+        result = vk.users.getSubscriptions(user_id=int(id), fields='name')
+        subscriptions_users.extend(result['users']['items'])
+        subscriptions_groups.extend(result['groups']['items'])
+        i += 1
+        if i % 10 == 0:
+            print(i)
+    with open('subscriptions_users.txt', 'w', encoding='utf-8') as f:
+        for user in subscriptions_users:
+            f.write(f'{user}\n')
+    with open('subscriptions_groups.txt', 'w', encoding='utf-8') as f:
+        for group in subscriptions_groups:
+            f.write(f'{group}\n')
+
+
 if __name__ == '__main__':
     vk = vk_auth(local_settings.login, local_settings.password)
     # groups = vk_group_search(vk, 'Дэд пейдж')
-    vk_wall_search(vk, -125339469)
-    check_pages(vk)
+    # vk_wall_search(vk, -125339469)
+    # check_pages(vk)
+    create_subscriptions_list(vk)
