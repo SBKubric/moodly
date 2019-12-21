@@ -99,10 +99,12 @@ def create_subscriptions_list(vk):
         i += 1
         if i % 10 == 0:
             print(i)
-    with open('subscriptions_users.txt', 'w', encoding='utf-8') as f:
+    with open('subscriptions_users.csv', 'w', encoding='utf-8') as f:
+        f.write('user\n')
         for user in subscriptions_users:
             f.write(f'{user}\n')
-    with open('subscriptions_groups.txt', 'w', encoding='utf-8') as f:
+    with open('subscriptions_groups.csv', 'w', encoding='utf-8') as f:
+        f.write('group\n')
         for group in subscriptions_groups:
             f.write(f'{group}\n')
 
