@@ -93,9 +93,9 @@ def create_subscriptions_list(vk):
     subscriptions_groups = []
     i = 0
     for id in user_ids[1:]:
-        result = vk.users.getSubscriptions(user_id=int(id), fields='name')
+        result = vk.users.getSubscriptions(user_id=int(id))
         subscriptions_users.extend(result['users']['items'])
-        subscriptions_groups.extend(result['groups']['items'])
+        subscriptions_groups.extend(result['groups']['items']['screen_name'])
         i += 1
         if i % 10 == 0:
             print(i)
@@ -109,9 +109,29 @@ def create_subscriptions_list(vk):
             f.write(f'{group}\n')
 
 
+def create_freands_list(vk):
+    user_ids = []
+    with open('checked_pages.txt', 'r', encoding='utf-8') as f:
+        for line in f:
+            user_ids.append(line)
+    friends = user_ids[1:]
+    i = 0
+    for id in user_ids[1:]:
+        result = vk.friends.get(user_id=int(id), count=1000)
+        friends.extend(result['items'])
+        i += 1
+        if i % 10 == 0:
+            print(i)
+    with open('friends.csv', 'w', encoding='utf-8') as f:
+        f.write('friend\n')
+        for friend in friends:
+            f.write(f'{friend}')
+
+
 if __name__ == '__main__':
     vk = vk_auth(local_settings.login, local_settings.password)
     # groups = vk_group_search(vk, 'Дэд пейдж')
     # vk_wall_search(vk, -125339469)
     # check_pages(vk)
-    create_subscriptions_list(vk)
+    # create_subscriptions_list(vk)
+    create_freands_list(vk)
