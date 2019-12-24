@@ -3,7 +3,16 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 import local_settings
 from collections import defaultdict
-from json import j
+import json
+import selenium
+
+
+def get_id_link(vk_id):
+    return 'https://vk.com/{}'.format(vk_id)
+
+
+def get_audio_link(html):
+    return ''
 
 
 def parse_audio_page(html, vk_id):
@@ -22,10 +31,14 @@ def get_audio_page(vk_id):
     yield html
 
 
+def write_songs_to_file(path, songs):
+    with open(path, mode='w') as file:
+        json.dump(songs, file)
+
+
 def main():
     html = get_audio_page('id1234')
-
-    songs_dict = parse_audio_page(page_path)
+    songs_dict = parse_audio_page(html)
     print(songs_dict)
 
 
