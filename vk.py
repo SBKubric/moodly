@@ -111,7 +111,7 @@ def create_subscriptions_list(vk):
 
 if __name__ == '__main__':
     vk = vk_auth(local_settings.login, local_settings.password)
-    # groups = vk_group_search(vk, 'Дэд пейдж')
-    # vk_wall_search(vk, -125339469)
-    # check_pages(vk)
+    groups = vk_group_search(vk, 'Дэд пейдж')
+    vk_wall_search(vk, -125339469)
+    check_pages(vk)
     create_subscriptions_list(vk)

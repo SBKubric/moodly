@@ -7,6 +7,9 @@ verify_ssl = true
 
 [packages]
 vk-api = "*"
+bs4 = "*"
+lxml = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.6"
