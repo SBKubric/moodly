@@ -7,12 +7,17 @@ import json
 import selenium
 
 
-def get_id_link(vk_id):
+def get_link_2_account(vk_id):
     return 'https://vk.com/{}'.format(vk_id)
 
 
 def get_audio_link(html):
-    return ''
+    bs = BeautifulSoup(html, 'lxml')
+    elem_list = bs.find_all('div', 'audios_module')
+    for elem in elem_list:
+        if elem.attrs['id'] == 'profile_audios':
+            a = elem.find('a', 'module_header')
+            return a.attrs['href']
 
 
 def parse_audio_page(html, vk_id):
@@ -26,9 +31,13 @@ def parse_audio_page(html, vk_id):
     return {'user': vk_id, 'songs': songs}
 
 
+def get_personal_page(vk_id):
+    with open('./acc2_page.html', encoding='windows-1251') as html:
+        return html.read()
+
+
 def get_audio_page(vk_id):
-    html = ''
-    yield html
+    return ''
 
 
 def write_songs_to_file(path, songs):
@@ -37,9 +46,12 @@ def write_songs_to_file(path, songs):
 
 
 def main():
-    html = get_audio_page('id1234')
-    songs_dict = parse_audio_page(html)
-    print(songs_dict)
+    # html = get_audio_page('id1234')
+    # songs_dict = parse_audio_page(html)
+    # print(songs_dict)
+    html = get_personal_page('test')
+    link = get_audio_link(html)
+    print(link)
 
 
 if __name__ == '__main__':
