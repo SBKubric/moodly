@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, render_template, redirect, url_for
-import string
 import random
+import string
+from threading import Thread
 
 from webapp.analysis.forms import QueryForm
 from webapp.analysis.models import Category, Age, Query
@@ -20,6 +21,18 @@ def load_select_field():
     return form
 
 
+def create_unique_url():
+    url_count = True
+    while url_count:
+        url = ''.join(random.choices(string.ascii_lowercase + string.digits, k=12))
+        url_count = Query.query.filter_by(result_url=url).count()
+    return url
+
+
+def thread_get_analytic(new_query):
+    pass
+
+
 @blueprint.route("/")
 def index():
     title = 'Анализ текста'
@@ -32,13 +45,13 @@ def start():
     form = load_select_field()
     print(form.errors)
     if form.validate_on_submit():
-        result_url = ''.join(random.choices(
-            string.ascii_lowercase + string.digits, k=12))
+        result_url = create_unique_url()
         status = 'Запрос принят'
         new_query = Query(category_id=form.category.data, query_str=form.query.data,
                           age_id=form.age.data, status=status, result_url=result_url)
         db.session.add(new_query)
         db.session.commit()
+        Thread(target=thread_get_analytic, args=(new_query)).start()
         return redirect(url_for('analysis.result', result_url=result_url))
 
     flash('Неправильные данные')

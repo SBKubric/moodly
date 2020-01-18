@@ -23,6 +23,17 @@ class Age(db.Model):
         return '<Возраст {}>'.format(self.name)
 
 
+class Result(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    positive = db.Column(db.Integer)
+    negative = db.Column(db.Integer)
+    neutral = db.Column(db.Integer)
+    queries = db.relationship('Query', backref='result', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Результат {}>'.format(self.id)
+
+
 class Query(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
@@ -31,7 +42,7 @@ class Query(db.Model):
     status = db.Column(db.String(20))
     result_url = db.Column(db.String(12), index=True, unique=True)
     date = db.Column(db.DateTime, default=datetime.utcnow)
+    result_id = db.Column(db.Integer, db.ForeignKey('result.id'))
 
     def __repr__(self):
-        return '<Запрос: {}(категория {}, возраст {})>'.format(
-            self.query, self.category.name, self.age.name)
+        return '<Запрос: {}(категория {}, возраст {})>'.format(self.query_str, self.category.name, self.age.name)
