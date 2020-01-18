@@ -62,8 +62,7 @@ def start():
 def result(result_url):
     result = Query.query.filter_by(result_url=result_url).first()
     if result:
-        status = result.status
-        return render_template('analysis/result.html', page_title=status)
+        return render_template('analysis/result.html', result=result)
 
     title = 'Ошибка. Запрос не наден'
     return render_template('analysis/result.html', page_title=title)

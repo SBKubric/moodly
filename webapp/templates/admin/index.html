@@ -1,5 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-Админка будет сделана потом
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr align="center">
+            <th scope="col" rowspan="2">id</th>
+            <th scope="col" rowspan="2">url</th>
+            <th scope="col" rowspan="2">Запрос</th>
+            <th scope="col" rowspan="2">Категория</th>
+            <th scope="col" rowspan="2">Возраст</th>
+            <th scope="col" rowspan="2">Статус</th>
+            <th scope="col" colspan="3">Результат</th>
+        </tr>
+        <tr>
+            <th scope="col">Положительные</th>
+            <th scope="col">Нетральные</th>
+            <th scope="col">Отрицательные</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for query in queries_list %}
+        <tr align="center">
+            <td>{{ query.id }}</td>
+            <td>
+                <a class="link" href="{{ url_for('analysis.result', result_url=query.result_url) }}">
+                    {{ query.result_url }}
+                </a>
+            </td>
+            <td>{{ query.query_str }}</td>
+            <td>{{ query.category.name }}</td>
+            <td>{{ query.age.name }}</td>
+            <td>{{ query.status }}</td>
+            {% if query.result_id %}
+            <td>{{ query.result.positive }}</td>
+            <td>{{ query.result.neutral }}</td>
+            <td>{{ query.result.negative }}</td>
+            {% else %}
+            <td></td>
+            <td></td>
+            <td></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
