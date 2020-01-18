@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <form action="{{ url_for('user.process_login') }}" method="POST" class="form-singnin">
+        {{ form.hidden_tag() }}
+        <h1 class="h3 mb-3 font-weight-normal">Авторизация</h1>
+        {{ form.username.label(class_='sr-only') }}
+        {{ form.username(placeholder=form.username.label.text) }}
+        {{ form.password.label(class_='sr-only') }}
+        {{ form.password(placeholder=form.password.label.text) }}
+        <div class="checkbox">
+            {{ form.remember_me() }}
+            {{ form.remember_me.label }}
+        </div>
+        <p>{{ form.submit() }}</p>
+    </form>
+</div>
+<div class="row justify-content-center">
+    <a class="btn btn-link" href="{{ url_for('user.register') }}">Зарегистрироваться</a>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p>
+        {% for str in text %}
+            {{ str }}<br>
+        {% endfor %}
+    </p>
+{% endblock %}
