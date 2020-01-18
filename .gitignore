@@ -132,3 +132,7 @@ dmypy.json
 .vscode/
 config.py
 *.db
+
+#sbkubric
+.idea/
+Pipfile.lock
