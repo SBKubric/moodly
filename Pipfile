@@ -6,10 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-vk-api = "*"
-bs4 = "*"
-lxml = "*"
-selenium = "*"
+vadersentiment = "*"
 
 [requires]
 python_version = "3.6"
