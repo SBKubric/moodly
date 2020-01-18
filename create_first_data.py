@@ -14,7 +14,7 @@ with app.app_context():
             print(f'Добавлена категория {name}')
     db.session.commit()
 
-    ages = [('Месяц', 'month'), ('Год', 'year')]
+    ages = [('Все время', 'all'), ('Час', 'hour'), ('День', 'day'), ('Неделя', 'week'), ('Месяц', 'month'), ('Год', 'year')]
     for name, value in ages:
         if not Age.query.filter_by(name=name).count():
             new_age = Age(name=name, value=value)
