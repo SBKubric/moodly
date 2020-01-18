@@ -11,6 +11,29 @@ def analyze(sentiments_dict: dict):
     return {key: score['compound'] for key, score in zip(sentiments_dict.keys(), score_list)}
 
 
+def count_scores(score_dict):
+    pos = list()
+    neg = list()
+    neu = list()
+    for key, score in zip(score_dict.keys(), score_dict.values()):
+        if score > 0.05:
+            pos.append(key)
+        elif score < -0.05:
+            neg.append(key)
+        else:
+            neu.append(key)
+        return {
+            'pos': len(pos),
+            'neu': len(neu),
+            'neg': len(neg)
+        }
+
+
+def get_score(sentiments_dict):
+    score_dict = analyze(sentiments_dict)
+    return count_scores(score_dict)
+
+
 def demo():
     demo_path = Path(DEMO_FILE)
     with open(demo_path) as file:
