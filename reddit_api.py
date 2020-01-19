@@ -1,4 +1,4 @@
-import praw
+import praw  
 import datetime
 
 
@@ -22,22 +22,25 @@ def main():
 
 def post_output(posts):
     with open('output.txt', 'w', encoding='utf-8') as f:
-        for post in posts:
-            f.write(f'{post}\n')
+        for key,value in posts.items():
+            f.write(f'{key}:{value},\n')
 
 
 def submissions(reddit, user_search, subreddit_name, sort_type, time, limit):
-    posts = []
+    posts = {}
     for submission in reddit.subreddit(subreddit_name).search(user_search, sort=sort_type, time_filter=time, limit=limit):
-        timestamp = submission.created_utc   # Time the submission was created, represented in Unix Time.
-        value = datetime.datetime.fromtimestamp(timestamp)
-        submission_time = value.strftime('%Y-%m-%d %H:%M:%S')
-        # print(f'{num}:[{submission.name}] {submission.title}({submission_time})')
-        posts.append({'name':submission.name,'title':submission.title,'time':submission_time})
+        submission.comment_sort = 'top'              # Include best, top, new, controversial, old and q&a.
+        submission.comment_limit = 100
+        timestamp = submission.created_utc           # Time the submission was created, represented in Unix Time.
+        submission.comments.replace_more(limit=0)
+        com_dict = {}
+        for comment in submission.comments.list()[1:]:
+            com_dict[comment.id] = comment.body
+        # value = datetime.datetime.fromtimestamp(timestamp)
+        # submission_time = value.strftime('%Y-%m-%d %H:%M:%S')       # Uncomment this for normal time.
+        post = {submission.name:{'title':submission.title, 'datetime':timestamp, 'comments':com_dict}}
+        posts.update(post)
     return posts
-
-    # for num, submission in enumerate(reddit.subreddit(subreddit_name).search(user_search, sort=sort_type, time_ filter=time, limit=limit), 1):
-    #     print(f'{num} : {submission.title}\n{submission.selftext}')
 
 
 if __name__ == '__main__':
