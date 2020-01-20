@@ -1,8 +1,8 @@
-"""first
+"""empty message
 
-Revision ID: 3a791577a50a
+Revision ID: 56e163380db2
 Revises: 
-Create Date: 2020-01-17 12:00:54.530305
+Create Date: 2020-01-20 20:08:25.650809
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3a791577a50a'
+revision = '56e163380db2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,12 +32,21 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_category_name'), 'category', ['name'], unique=True)
+    op.create_table('result',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('positive', sa.Integer(), nullable=True),
+    sa.Column('negative', sa.Integer(), nullable=True),
+    sa.Column('neutral', sa.Integer(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=50), nullable=True),
     sa.Column('password', sa.String(length=128), nullable=True),
     sa.Column('role', sa.String(length=10), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('email', sa.String(length=50), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_index(op.f('ix_user_role'), 'user', ['role'], unique=False)
     op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
@@ -46,11 +55,13 @@ def upgrade():
     sa.Column('category_id', sa.Integer(), nullable=True),
     sa.Column('query_str', sa.String(length=50), nullable=True),
     sa.Column('age_id', sa.Integer(), nullable=True),
-    sa.Column('status', sa.String(length=20), nullable=True),
+    sa.Column('status', sa.String(length=25), nullable=True),
     sa.Column('result_url', sa.String(length=12), nullable=True),
     sa.Column('date', sa.DateTime(), nullable=True),
+    sa.Column('result_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['age_id'], ['age.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['category.id'], ),
+    sa.ForeignKeyConstraint(['result_id'], ['result.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_query_result_url'), 'query', ['result_url'], unique=True)
@@ -64,6 +75,7 @@ def downgrade():
     op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_index(op.f('ix_user_role'), table_name='user')
     op.drop_table('user')
+    op.drop_table('result')
     op.drop_index(op.f('ix_category_name'), table_name='category')
     op.drop_table('category')
     op.drop_index(op.f('ix_age_name'), table_name='age')

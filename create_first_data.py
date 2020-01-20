@@ -6,7 +6,7 @@ from webapp.user.models import User
 app = create_app()
 
 with app.app_context():
-    categories = [('Политика', 'politic'), ('Новости', 'news')]
+    categories = [('Политика', 'politics'), ('Новости', 'news')]
     for name, url in categories:
         if not Category.query.filter_by(name=name).count():
             new_category = Category(name=name, url=url)
@@ -14,7 +14,7 @@ with app.app_context():
             print(f'Добавлена категория {name}')
     db.session.commit()
 
-    ages = [('Все время', 'all'), ('Час', 'hour'), ('День', 'day'), ('Неделя', 'week'), ('Месяц', 'month'), ('Год', 'year')]
+    ages = [('Час', 'hour'), ('День', 'day'), ('Неделя', 'week'), ('Месяц', 'month'), ('Год', 'year'), ('Все время', 'all')]
     for name, value in ages:
         if not Age.query.filter_by(name=name).count():
             new_age = Age(name=name, value=value)

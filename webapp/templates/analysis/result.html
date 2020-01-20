@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row col-6 offset-3">
+<div class="row col-6 offset-3" id="result">
     {% if result.status == 'Завершен' %}
-    <table class="table" id="result" update="False">
+    <table class="table" id="table" update="False">
         <thead>
             <tr>
                 <th scope="col" colspan="2">Результат анализа</th>
@@ -19,12 +19,12 @@
                 <td>{{ result.result.neutral }}</td>
             </tr>
             <tr>
-                <td>Негатиых:</td>
+                <td>Негативных:</td>
                 <td>{{ result.result.negative }}</td>
             </tr>
         </tbody>
         {% else %}
-        <table class="table" id="result" update="True">
+        <table class="table" id="table" update="True">
             <tbody>
                 <tr>
                     <th scope="row">Статус анализа:</th>
@@ -45,10 +45,10 @@
 {% block script %}
 <script type="text/javascript">
     idIntervals = setInterval(function () {
-        $("#result").load("{{ url_for('analysis.result', result_url=result.result_url) }} #result");
-        if ($("#result").attr("update") == "False") {
-            clearInterval(idIntervals)
-        }
-    }, 10000); 
+        $("#result").load("{{ url_for('analysis.result', result_url=result.result_url) }} #table");
+        if ($("#table").attr("update") == "False") {
+            clearInterval(idIntervals);
+        };
+    }, 30000); 
 </script>
 {% endblock %}

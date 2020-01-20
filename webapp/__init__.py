@@ -4,10 +4,25 @@ from flask_migrate import Migrate
 
 from webapp.db import db
 from webapp.admin.views import blueprint as admin_blueprint
-from webapp.analysis.models import Category, Age, Query
+from webapp.analysis.models import Category, Age, Query, Result
 from webapp.analysis.views import blueprint as analysis_blueprint
 from webapp.user.models import User
 from webapp.user.views import blueprint as user_blueprint
+
+from webapp.tasks import celery
+
+
+def init_celery(app, celery):
+    """Add flask app context to celery.Task"""
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
 
 
 def create_app():

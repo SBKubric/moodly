@@ -39,7 +39,7 @@ class Query(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     query_str = db.Column(db.String(50))
     age_id = db.Column(db.Integer, db.ForeignKey('age.id'))
-    status = db.Column(db.String(20))
+    status = db.Column(db.String(25))
     result_url = db.Column(db.String(12), index=True, unique=True)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     result_id = db.Column(db.Integer, db.ForeignKey('result.id'))
