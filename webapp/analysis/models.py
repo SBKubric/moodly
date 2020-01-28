@@ -1,48 +1,43 @@
 from datetime import datetime
 
 from webapp.db import db
+from webapp.reddit_api.models import Post
+from webapp.user.models import User
+
+association_table = db.Table('association',
+                             db.Column('query_id', db.Integer, db.ForeignKey('query.id')),
+                             db.Column('post_id', db.Integer, db.ForeignKey('post.id'))
+                             )
 
 
-class Category(db.Model):
+class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), index=True, unique=True)
-    url = db.Column(db.String(20))
-    queries = db.relationship('Query', backref='category', lazy='dynamic')
+    title = db.Column(db.String(50))
+    name = db.Column(db.String(50))
+    value = db.Column(db.String(50))
 
     def __repr__(self):
-        return '<Категория {}>'.format(self.name)
-
-
-class Age(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(10), index=True, unique=True)
-    value = db.Column(db.String(10))
-    queries = db.relationship('Query', backref='age', lazy='dynamic')
-
-    def __repr__(self):
-        return '<Возраст {}>'.format(self.name)
-
-
-class Result(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    positive = db.Column(db.Integer)
-    negative = db.Column(db.Integer)
-    neutral = db.Column(db.Integer)
-    queries = db.relationship('Query', backref='result', lazy='dynamic')
-
-    def __repr__(self):
-        return '<Результат {}>'.format(self.id)
+        return '<{} = {}>'.format(self.name, self.value)
 
 
 class Query(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('settings.id'))
+    category = db.relationship("Settings", foreign_keys=[category_id])
     query_str = db.Column(db.String(50))
-    age_id = db.Column(db.Integer, db.ForeignKey('age.id'))
+    age_id = db.Column(db.Integer, db.ForeignKey('settings.id'))
+    age = db.relationship("Settings", foreign_keys=[age_id])
     status = db.Column(db.String(25))
+    percent = db.Column(db.Integer)
     result_url = db.Column(db.String(12), index=True, unique=True)
     date = db.Column(db.DateTime, default=datetime.utcnow)
-    result_id = db.Column(db.Integer, db.ForeignKey('result.id'))
+    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    posts = db.relationship("Post",
+                            secondary=association_table,
+                            backref="queries",
+                            cascade="all",
+                            passive_deletes=True
+                            )
 
     def __repr__(self):
-        return '<Запрос: {}(категория {}, возраст {})>'.format(self.query_str, self.category.name, self.age.name)
+        return '<Запрос: {}>'.format(self.query_str)

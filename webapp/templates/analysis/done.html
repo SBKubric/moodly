@@ -1,0 +1,104 @@
+<div class="conteiner">
+    <div class="row row-cols-1 row-cols-md-3">
+        <div class="col mb-4">
+            <div class="card text-center shadow">
+                <div class="card-header">
+                    Статистика постов
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Положительные:
+                                <span class="badge badge-success badge-pill">{{ result_posts.pos }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Нейтральные:
+                                <span class="badge badge-secondary badge-pill">{{ result_posts.neu }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Отрицательные:
+                                <span class="badge badge-danger badge-pill">{{ result_posts.neg }}</span>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar"
+                            style="width: {{ result_posts.pos_percent }}%"
+                            aria-valuenow="{{ result_posts.pos_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-secondary" role="progressbar"
+                            style="width: {{ result_posts.neu_percent }}%"
+                            aria-valuenow="{{ result_posts.neu_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-danger" role="progressbar"
+                            style="width: {{ result_posts.neg_percent }}%"
+                            aria-valuenow="{{ result_posts.neg_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card text-center shadow">
+                <div class="card-header">
+                    Статистика комментариев
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Положительные:
+                                <span class="badge badge-success badge-pill">{{ result_comments.pos }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Нейтральные:
+                                <span class="badge badge-secondary badge-pill">{{ result_comments.neu }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Отрицательные:
+                                <span class="badge badge-danger badge-pill">{{ result_comments.neg }}</span>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar"
+                            style="width: {{ result_comments.pos_percent }}%"
+                            aria-valuenow="{{ result_comments.pos_percent }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                        <div class="progress-bar bg-secondary" role="progressbar"
+                            style="width: {{ result_comments.neu_percent }}%"
+                            aria-valuenow="{{ result_comments.neu_percent }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar"
+                            style="width: {{ result_comments.neg_percent }}%"
+                            aria-valuenow="{{ result_comments.neg_percent }}" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card text-center shadow">
+                <div class="card-header">
+                    Топ комментаторов
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <ul class="list-group" style="overflow: auto; max-height: 60vh;">
+                            {% for author, count in authors.items() %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ author }}
+                                <span class="badge badge-primary badge-pill">{{ count }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </p>
+                </div>
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

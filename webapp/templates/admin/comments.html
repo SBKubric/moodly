@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.index') }}">Вернуться</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ name }} ({{ list.total }})</li>
+    </ol>
+</nav>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% for page in list.iter_pages(left_edge=2, left_current=2, right_current=2, right_edge=2) %}
+        {% if page %}
+        {% if page != list.page %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('admin.comments', page=page) }}">{{ page }}</a></li>
+        {% else %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">{{ page }} <span class="sr-only">(current)</span></a>
+        </li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">. . .</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr align="center">
+            <th>id</th>
+            <th>reddit_id</th>
+            <th>URL</th>
+            <th>Автор</th>
+            <th>Текст</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in list.items %}
+        <tr align="center">
+            <td>{{ row.id }}</td>
+            <td>{{ row.reddit_id }}</td>
+            <td>{{ row.url }}</td>
+            <td>{{ row.author }}</td>
+            <td>{{ row.body }}</td>
+            <td>{{ row.score }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% for page in list.iter_pages(left_edge=2, left_current=2, right_current=2, right_edge=2) %}
+        {% if page %}
+        {% if page != list.page %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('admin.comments', page=page) }}">{{ page }}</a></li>
+        {% else %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">{{ page }} <span class="sr-only">(current)</span></a>
+        </li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">. . .</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endblock %}

@@ -1,6 +1,9 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from pathlib import Path
 
+from webapp.db import db
+from webapp.analysis.models import Query
+from webapp.reddit_api.models import Post, Comment
 
 DEMO_FILE = './demo_file'
 
@@ -57,6 +60,16 @@ def demo():
             print('Key: {}, Score: {}'.format(key, score))
         result = count_scores(score_dict)
         print(result['pos'], result['neu'], result['neg'])
+
+
+def analyze_db(query_id):
+    query = Query.query.get(query_id)
+    analyzer = SentimentIntensityAnalyzer()
+    for post in query.posts:
+        post.score = analyzer.polarity_scores(post.body)['compound']
+        for comment in post.comments:
+            comment.score = analyzer.polarity_scores(comment.body)['compound']
+    db.session.commit()
 
 
 def main():

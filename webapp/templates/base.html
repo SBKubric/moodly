@@ -15,8 +15,8 @@
 
 <body>
     {% include "menu.html" %}
-    <div class="container">
-        <h1>{{ page_title }}</h1>
+    <div class="container mb-3">
+        <h2>{{ page_title }}</h2>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div class="alert alert-warning" role="alert">

@@ -1,54 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row col-6 offset-3" id="result">
-    {% if result.status == 'Завершен' %}
-    <table class="table" id="table" update="False">
-        <thead>
-            <tr>
-                <th scope="col" colspan="2">Результат анализа</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Позитивных:</td>
-                <td>{{ result.result.positive }}</td>
-            </tr>
-            <tr>
-                <td>Нетральных:</td>
-                <td>{{ result.result.neutral }}</td>
-            </tr>
-            <tr>
-                <td>Негативных:</td>
-                <td>{{ result.result.negative }}</td>
-            </tr>
-        </tbody>
-        {% else %}
-        <table class="table" id="table" update="True">
-            <tbody>
-                <tr>
-                    <th scope="row">Статус анализа:</th>
-                    <td>{{ result.status }}</td>
-                </tr>
-                <tr>
-                    <td colspan="2">Страница автоматически обновляется, вы можете дождаться окончания анализа или пройти
-                        позже по этому адресу <a
-                            href="{{ url_for('analysis.result', result_url=result.result_url, _external=True) }}">
-                            {{ url_for('analysis.result', result_url=result.result_url, _external=True) }}</a></td>
-                </tr>
-            </tbody>
-            {% endif %}
-        </table>
+<div class="conteiner" id="result" code="{{ result.result_url }}">
+    <div class="text-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript">
-    idIntervals = setInterval(function () {
-        $("#result").load("{{ url_for('analysis.result', result_url=result.result_url) }} #table");
-        if ($("#table").attr("update") == "False") {
-            clearInterval(idIntervals);
-        };
-    }, 30000); 
+    function update() {
+        code = $("#result").attr("code");
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('analysis.update') }}",
+            data: {
+                "code": code
+            },
+            success: function (data) {
+                if (data.end) {
+                    clearInterval(idIntervals);
+                }
+                $("#result").html(data.html)
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    };
+    setTimeout(update, 500);
+    idIntervals = setInterval(update, 5000); 
 </script>
 {% endblock %}

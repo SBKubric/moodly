@@ -1,8 +1,10 @@
 from flask import Blueprint, flash, render_template, redirect, url_for
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 from webapp.user.forms import LoginForm, RegistrationForm
 from webapp.user.models import User
+from webapp.analysis.models import Query
+from webapp.config import ROW_PER_PAGE
 
 
 blueprint = Blueprint('user', __name__, url_prefix='/users')
@@ -66,3 +68,12 @@ def process_reg():
             for error in errors:
                 flash('Ошибка в поле "{}": - {}'.format(getattr(form, field).label.text, error))
         return redirect(url_for('user.regist'))
+
+
+@blueprint.route('/queries', methods=['GET', 'POST'])
+@blueprint.route('/queries/<int:page>', methods=['GET', 'POST'])
+@login_required
+def queries(page=1):
+    title = 'Мои запросы'
+    queries = Query.query.filter_by(user=current_user.get_id()).paginate(page, ROW_PER_PAGE, False)
+    return render_template('user/queries.html', page_title=title, queries=queries)

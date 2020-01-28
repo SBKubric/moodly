@@ -1,0 +1,21 @@
+<div class="conteiner" id="result" code="{{ result.result_url }}">
+    <div class="row">
+        <div class="card shadow text-center col-6 offset-3">
+            <div class="card-header">
+                Статус анализа: <b>{{ result.status }}</b>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Страница автоматически обновляется, вы можете дождаться окончания анализа или
+                    пройти
+                    позже по этому адресу <a
+                        href="{{ url_for('analysis.result', result_url=result.result_url, _external=True) }}">{{ url_for('analysis.result', result_url=result.result_url, _external=True) }}</a>
+                </p>
+            </div>
+            <div class="card-footer">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{ result.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ result.percent }}%">Осталось: {{ time_end }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

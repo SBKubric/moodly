@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.index') }}">Вернуться</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ page }}</li>
+    </ol>
+</nav>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr align="center">
+            <th>id</th>
+            <th>Раздел</th>
+            <th>Имя</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in list %}
+        <tr align="center">
+            <td>{{ row.id }}</td>
+            <td>{{ row.title }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

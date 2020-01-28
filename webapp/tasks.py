@@ -1,12 +1,12 @@
-from reddit_api import submissions, post_output
-from text_analysis import analyze, count_scores
-from webapp.analysis.models import Query, Result
+from webapp.reddit_api.reddit_api import submissions, post_output, get_posts
+from text_analysis import get_score, analyze_db
+from webapp.analysis.models import Query
 from webapp.db import db
-
+from webapp.config import CELERY_BROCKER_URL
 
 from celery import Celery
 
-celery = Celery('webapp', broker='redis://localhost')
+celery = Celery('webapp', broker=CELERY_BROCKER_URL)
 
 
 @celery.task
@@ -23,5 +23,16 @@ def start_analyse(new_query_id):
     db.session.add(new_result)
     db.session.commit()
     new_query.status = 'Завершен'
-    new_query.result_id = new_result.id
+    db.session.commit()
+
+
+@celery.task
+def start_analyse2(new_query_id):
+    new_query = Query.query.filter_by(id=new_query_id).first()
+    new_query.status = 'Запрос обрабатывается'
+    db.session.commit()
+    get_posts(new_query.query_str, new_query.category.value, new_query.age.value, new_query.id, limit=100)
+    new_query.status = 'Запрос анализируется'
+    score = analyze_db(new_query_id)
+    new_query.status = 'Завершен'
     db.session.commit()

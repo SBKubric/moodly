@@ -1,10 +1,9 @@
-from flask import Flask, flash, render_template, redirect, url_for
-from flask_login import LoginManager, current_user, login_required
+from flask import Flask
+from flask_login import LoginManager
 from flask_migrate import Migrate
 
 from webapp.db import db
 from webapp.admin.views import blueprint as admin_blueprint
-from webapp.analysis.models import Category, Age, Query, Result
 from webapp.analysis.views import blueprint as analysis_blueprint
 from webapp.user.models import User
 from webapp.user.views import blueprint as user_blueprint
