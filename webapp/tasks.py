@@ -31,7 +31,7 @@ def start_analyse2(new_query_id):
     new_query = Query.query.filter_by(id=new_query_id).first()
     new_query.status = 'Запрос обрабатывается'
     db.session.commit()
-    get_posts(new_query.query_str, new_query.category.value, new_query.age.value, new_query.id, limit=100)
+    get_posts(new_query.query_str, new_query.category.value, new_query.age.value, new_query.id)
     new_query.status = 'Запрос анализируется'
     score = analyze_db(new_query_id)
     new_query.status = 'Завершен'

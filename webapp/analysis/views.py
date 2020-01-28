@@ -116,7 +116,7 @@ def update():
                                    authors=authors)
             end = True
         else:
-            time_end = (datetime.utcnow() - result.date) * (1 - result.percent / 100) * 1.1
+            time_end = (datetime.utcnow() - result.date) * (1 - result.percent / 100)
             time_end = str(time_end).split('.')[0]
             html = render_template('analysis/waiting.html', result=result, time_end=time_end)
             end = False

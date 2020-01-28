@@ -5,7 +5,7 @@ from webapp.user.forms import LoginForm, RegistrationForm
 from webapp.user.models import User
 from webapp.analysis.models import Query
 from webapp.config import ROW_PER_PAGE
-
+from webapp.db import db
 
 blueprint = Blueprint('user', __name__, url_prefix='/users')
 

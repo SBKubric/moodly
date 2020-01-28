@@ -22,7 +22,7 @@ with app.app_context():
             print(f'Добавлен возраст {name}')
     db.session.commit()
 
-    users = [('admin', 'admin')]
+    users = [('admin', 'admin.')]
     for username, password in users:
         if not User.query.filter_by(username=username).count():
             new_user = User(username=username, role='admin')
