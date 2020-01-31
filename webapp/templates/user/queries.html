@@ -4,7 +4,6 @@
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr align="center">
-            <th>id</th>
             <th>url</th>
             <th>Запрос</th>
             <th>Категория</th>
@@ -16,7 +15,6 @@
     <tbody>
         {% for query in queries.items %}
         <tr align="center">
-            <td>{{ query.id }}</td>
             <td>
                 <a class="link" href="{{ url_for('analysis.result', result_url=query.result_url) }}">
                     {{ query.result_url }}

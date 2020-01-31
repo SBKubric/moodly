@@ -34,7 +34,7 @@ def create_unique_url():
     return url
 
 
-def summ_score(score_list):
+def summ_score(score_list, percent=True):
     pos, neg, neu = 0, 0, 0
     for score in score_list:
         if score > 0.05:
@@ -44,21 +44,23 @@ def summ_score(score_list):
         else:
             neu += 1
     summ = pos + neu + neg
-    if summ:
-        percent = {'pos_percent': int(pos / summ * 100),
-                   'neu_percent': int(neu / summ * 100),
-                   'neg_percent': int(neg / summ * 100)}
-    else:
-        percent = {'pos_percent': 0, 'neu_percent': 100, 'neg_percent': 0}
-    percent.update({'pos': pos, 'neu': neu, 'neg': neg})
-    return percent
+    result = {'pos': pos, 'neu': neu, 'neg': neg}
+    if percent:
+        if summ:
+            result.update({'pos_percent': int(pos / summ * 100),
+                           'neu_percent': 100,
+                           'neg_percent': int(neg / summ * 100)})
+            result['neu_percent'] -= result['pos_percent'] + result['neg_percent']
+        else:
+            result.update({'pos_percent': 0, 'neu_percent': 100, 'neg_percent': 0})
+    return result
 
 
 @blueprint.route("/")
 def index():
     title = 'Анализ текста'
     query_form = load_select_field()
-    return render_template('analysis/index.html', page_title=title, form=query_form)
+    return render_template('analysis/index.html', name=title, form=query_form)
 
 
 @blueprint.route('/start', methods=['POST'])
@@ -105,15 +107,15 @@ def update():
             for post in result.posts:
                 for comment in post.comments:
                     comments.append(comment.score)
-                    if comment.author in authors:
-                        authors[comment.author] += 1
-                    else:
-                        authors[comment.author] = 1
+                    if comment.author not in authors:
+                        authors[comment.author] = []
+                    authors[comment.author].append(comment.score)
             result_comments = summ_score(comments)
-            authors = {key: authors[key] for key in sorted(authors, key=authors.get, reverse=True)}
+            authors_score = {key: summ_score(authors[key], False)
+                             for key in sorted(authors, key=lambda name: len(authors[name]), reverse=True)}
             html = render_template('analysis/done.html', result_posts=result_posts,
                                    result_comments=result_comments,
-                                   authors=authors)
+                                   authors=authors_score)
             end = True
         else:
             time_end = (datetime.utcnow() - result.date) * (1 - result.percent / 100)

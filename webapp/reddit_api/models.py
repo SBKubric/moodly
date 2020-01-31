@@ -6,6 +6,7 @@ class Post(db.Model):
     reddit_id = db.Column(db.String(50))
     body = db.Column(db.Text)
     url = db.Column(db.String(150))
+    done = db.Column(db.Boolean, default=False)
     score = db.Column(db.Float)
     comments = db.relationship('Comment', backref='comments', lazy='dynamic', cascade='all,delete-orphan')
 

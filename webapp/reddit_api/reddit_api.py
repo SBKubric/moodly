@@ -4,7 +4,7 @@ import praw
 from webapp.db import db
 from webapp.settings import *
 from webapp.reddit_api.models import Comment, Post
-from webapp.analysis.models import Query as Query1
+from webapp.analysis.models import Query
 
 
 def reddit_auth():
@@ -55,13 +55,13 @@ def submissions(user_search, subreddit_name, time, sort_type='relevance', limit=
     return posts
 
 
-def get_posts(user_search, subreddit_name, time, query_id, sort_type='relevance', limit=None, coment_length=10):
-    search = reddit.subreddit(subreddit_name).search(user_search, sort=sort_type, time_filter=time, limit=limit)
+def get_posts(query_id, sort_type='relevance', limit=None, coment_length=10):
+    query = Query.query.get(query_id)
+    search = reddit.subreddit(query.category.value).search(query.query_str, sort=sort_type, time_filter=query.age.value, limit=limit)
     posts_list = [_.id for _ in search]
-    posts_db = [_.reddit_id for _ in Post.query.filter(Post.reddit_id.in_(posts_list)).all()]
-    query = Query1.query.get(query_id)
+    posts_db = {_.reddit_id: _.id for _ in Post.query.filter(Post.reddit_id.in_(posts_list)).all()}
     index = 1
-    for submission in reddit.subreddit(subreddit_name).search(user_search, sort=sort_type, time_filter=time, limit=limit):
+    for submission in reddit.subreddit(query.category.value).search(query.query_str, sort=sort_type, time_filter=query.age.value, limit=limit):
         if submission.id not in posts_db:
             url = f'https://www.reddit.com{submission.permalink}/'
             new_post = Post(reddit_id=submission.id, body=submission.title, url=url, score=0)
@@ -77,9 +77,11 @@ def get_posts(user_search, subreddit_name, time, query_id, sort_type='relevance'
                                       author=str(comment.author), post_id=new_post.id, url=url, score=0)
                 db.session.add(new_comment)
             query.posts.append(new_post)
-            query.percent = int(index / len(posts_list) * 100)
-            db.session.commit()
-            index += 1
+        else:
+            query.posts.append(Post.query.get(posts_db[submission.id]))
+        query.percent = int(index / len(posts_list) * 100)
+        db.session.commit()
+        index += 1
 
 
 if __name__ == '__main__':

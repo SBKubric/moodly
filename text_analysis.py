@@ -66,9 +66,11 @@ def analyze_db(query_id):
     query = Query.query.get(query_id)
     analyzer = SentimentIntensityAnalyzer()
     for post in query.posts:
-        post.score = analyzer.polarity_scores(post.body)['compound']
-        for comment in post.comments:
-            comment.score = analyzer.polarity_scores(comment.body)['compound']
+        if not post.done:
+            post.score = analyzer.polarity_scores(post.body)['compound']
+            post.done = True
+            for comment in post.comments:
+                comment.score = analyzer.polarity_scores(comment.body)['compound']
     db.session.commit()
 
 

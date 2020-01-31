@@ -35,6 +35,7 @@
             <th>Категория</th>
             <th>Возраст</th>
             <th>Статус</th>
+            <th>Дата</th>
             <th>Пользователь</th>
         </tr>
     </thead>
@@ -51,6 +52,7 @@
             <td>{{ query.category.name }}</td>
             <td>{{ query.age.name }}</td>
             <td>{{ query.status }}</td>
+            <td>{{ query.date.strftime('%d.%m.%Y %H:%M') }}</td>
             <td>{{ query.author.username }}</td>
         </tr>
         {% endfor %}

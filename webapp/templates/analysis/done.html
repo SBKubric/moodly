@@ -1,7 +1,7 @@
 <div class="conteiner">
     <div class="row row-cols-1 row-cols-md-3">
         <div class="col mb-4">
-            <div class="card text-center shadow">
+            <div class="card text-center shadow border-dark">
                 <div class="card-header">
                     Статистика постов
                 </div>
@@ -27,19 +27,22 @@
                     <div class="progress" style="height: 30px;">
                         <div class="progress-bar bg-success" role="progressbar"
                             style="width: {{ result_posts.pos_percent }}%"
-                            aria-valuenow="{{ result_posts.pos_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            aria-valuenow="{{ result_posts.pos_percent }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ result_posts.pos_percent }}%</div>
                         <div class="progress-bar bg-secondary" role="progressbar"
                             style="width: {{ result_posts.neu_percent }}%"
-                            aria-valuenow="{{ result_posts.neu_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            aria-valuenow="{{ result_posts.neu_percent }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ result_posts.neu_percent }}%</div>
                         <div class="progress-bar bg-danger" role="progressbar"
                             style="width: {{ result_posts.neg_percent }}%"
-                            aria-valuenow="{{ result_posts.neg_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            aria-valuenow="{{ result_posts.neg_percent }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ result_posts.neg_percent }}%</div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col mb-4">
-            <div class="card text-center shadow">
+            <div class="card text-center shadow border-dark">
                 <div class="card-header">
                     Статистика комментариев
                 </div>
@@ -62,25 +65,28 @@
                     </p>
                 </div>
                 <div class="card-footer text-muted">
-                    <div class="progress">
+                    <div class="progress" style="height: 30px;">
                         <div class="progress-bar bg-success" role="progressbar"
                             style="width: {{ result_comments.pos_percent }}%"
                             aria-valuenow="{{ result_comments.pos_percent }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ result_comments.pos_percent }}%
                         </div>
                         <div class="progress-bar bg-secondary" role="progressbar"
                             style="width: {{ result_comments.neu_percent }}%"
                             aria-valuenow="{{ result_comments.neu_percent }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ result_comments.neu_percent }}%
                         </div>
                         <div class="progress-bar bg-danger" role="progressbar"
                             style="width: {{ result_comments.neg_percent }}%"
                             aria-valuenow="{{ result_comments.neg_percent }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ result_comments.neg_percent }}%
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col mb-4">
-            <div class="card text-center shadow">
+            <div class="card text-center shadow border-dark">
                 <div class="card-header">
                     Топ комментаторов
                 </div>
@@ -88,10 +94,16 @@
                     <p class="card-text">
                         <ul class="list-group" style="overflow: auto; max-height: 60vh;">
                             {% for author, count in authors.items() %}
+                            {% if author != 'None' %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ author }}
-                                <span class="badge badge-primary badge-pill">{{ count }}</span>
+                                <div>
+                                    <span class="badge badge-success badge-pill">{{ count.pos }}</span>
+                                    <span class="badge badge-secondary badge-pill">{{ count.neu }}</span>
+                                    <span class="badge badge-danger badge-pill">{{ count.neg }}</span>
+                                </div>
                             </li>
+                            {% endif %}
                             {% endfor %}
                         </ul>
                     </p>

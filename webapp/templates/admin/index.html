@@ -1,12 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content">
-    <div class="list-group">
-        <a href="{{ url_for('admin.settings') }}" class="list-group-item list-group-item-action">Настройки</a>
-        <a href="{{ url_for('admin.queries') }}" class="list-group-item list-group-item-action">Запросы</a>
-        <a href="{{ url_for('admin.posts') }}" class="list-group-item list-group-item-action">Посты</a>
-        <a href="{{ url_for('admin.comments') }}" class="list-group-item list-group-item-action">Комментарии</a>
+<div class="row row-cols-1 row-cols-md-2">
+    <div class="col mb-4">
+        <div class="card">
+            <div class="card-header">
+                Системные
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('admin.settings') }}" class="btn btn-primary">Параметры</a>
+            </div>
+        </div>
+    </div>
+    <div class="col mb-4">
+        <div class="card">
+            <div class="card-header">
+                Анализ
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('admin.queries') }}" class="btn btn-primary">Запросы</a>
+            </div>
+        </div>
+    </div>
+    <div class="col mb-4">
+        <div class="card">
+            <div class="card-header">
+                Reddit
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a href="{{ url_for('admin.posts') }}" class="btn btn-primary">Посты</a>
+                    </li>
+                    <li class="list-group-item"><a href="{{ url_for('admin.comments') }}"
+                            class="btn btn-primary">Комментарии</a></li>
+                </ul>
+
+
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
