@@ -118,8 +118,11 @@ def update():
                                    authors=authors_score)
             end = True
         else:
-            time_end = (datetime.utcnow() - result.date) * (1 - result.percent / 100)
-            time_end = str(time_end).split('.')[0]
+            if result.percent:
+                time_end = (datetime.utcnow() - result.date) * (100 / result.percent - 1)
+                time_end = str(time_end).split('.')[0]
+            else:
+                time_end = '00:00'
             html = render_template('analysis/waiting.html', result=result, time_end=time_end)
             end = False
         return jsonify({"html": html, 'end': end})

@@ -75,5 +75,5 @@ def process_reg():
 @login_required
 def queries(page=1):
     title = 'Мои запросы'
-    queries = Query.query.filter_by(user=current_user.get_id()).paginate(page, ROW_PER_PAGE, False)
+    queries = Query.query.filter_by(user=current_user.get_id()).paginate(page, 10, False)
     return render_template('user/queries.html', page_title=title, queries=queries)
