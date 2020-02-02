@@ -130,9 +130,13 @@ dmypy.json
 
 # kupavel
 .vscode/
-config.py
 *.db
 
 #sbkubric
 .idea/
 Pipfile.lock
+
+#docker
+*.log
+docker/mariadb/db/*
+*.rdb

@@ -2,11 +2,11 @@ from webapp.reddit_api.reddit_api import submissions, post_output, get_posts
 from text_analysis import get_score, analyze_db
 from webapp.analysis.models import Query
 from webapp.db import db
-from webapp.config import CELERY_BROCKER_URL
+from webapp.config import CELERY_BROCKER_URL, CELERY_RESULT_BACKEND
 
 from celery import Celery
 
-celery = Celery('webapp', broker=CELERY_BROCKER_URL)
+celery = Celery('webapp', broker=CELERY_BROCKER_URL, backend=CELERY_RESULT_BACKEND)
 
 
 @celery.task

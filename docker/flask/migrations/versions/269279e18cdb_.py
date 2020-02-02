@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 5e5ecdf8e962
+Revision ID: 269279e18cdb
 Revises: 
-Create Date: 2020-01-26 22:17:45.954959
+Create Date: 2020-02-02 19:40:33.518147
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5e5ecdf8e962'
+revision = '269279e18cdb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('reddit_id', sa.String(length=50), nullable=True),
     sa.Column('body', sa.Text(), nullable=True),
-    sa.Column('url', sa.String(length=50), nullable=True),
+    sa.Column('url', sa.String(length=150), nullable=True),
+    sa.Column('done', sa.Boolean(), nullable=True),
     sa.Column('score', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -48,7 +49,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('reddit_id', sa.String(length=50), nullable=True),
     sa.Column('body', sa.Text(), nullable=True),
-    sa.Column('url', sa.String(length=50), nullable=True),
+    sa.Column('url', sa.String(length=150), nullable=True),
     sa.Column('author', sa.String(length=50), nullable=True),
     sa.Column('score', sa.Float(), nullable=True),
     sa.Column('post_id', sa.Integer(), nullable=True),
@@ -61,10 +62,13 @@ def upgrade():
     sa.Column('query_str', sa.String(length=50), nullable=True),
     sa.Column('age_id', sa.Integer(), nullable=True),
     sa.Column('status', sa.String(length=25), nullable=True),
+    sa.Column('percent', sa.Integer(), nullable=True),
     sa.Column('result_url', sa.String(length=12), nullable=True),
     sa.Column('date', sa.DateTime(), nullable=True),
+    sa.Column('user', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['age_id'], ['settings.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['settings.id'], ),
+    sa.ForeignKeyConstraint(['user'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_query_result_url'), 'query', ['result_url'], unique=True)

@@ -1,0 +1,62 @@
+version: '3'
+services:
+    redis:
+        image: redis:4.0-alpine
+        volumes:
+            - ./redis:/data
+        ports:
+            - "6379:6379"
+
+    mariadb:
+        image: mariadb:latest
+        volumes:
+            - ./mariadb/db/:/var/lib/mysql
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+            MYSQL_DATABASE: 'moodly'
+            MYSQL_USER: 'moodly'
+            MYSQL_PASSWORD: 'sengei8selaM'
+        ports:
+            - "3306:3306"
+    
+    flask:
+        build: ./flask
+        links:
+            - redis:redis-server
+            - mariadb:dbserver
+        environment:
+            DATABASE_URL: 'mysql+pymysql://moodly:sengei8selaM@dbserver/moodly?charset=utf8mb4'
+            CELERY_BROCKER_URL: 'redis://redis-server'
+            CELERY_RESULT_BACKEND: 'redis://redis-server'
+        command: /moodly/run.sh
+        ports:
+            - '8000:8000'
+        depends_on:
+            - mariadb
+  
+    celery:
+        build: ./flask
+        links:
+            - redis:redis-server
+            - mariadb:dbserver
+        environment:
+            DATABASE_URL: 'mysql+pymysql://moodly:sengei8selaM@dbserver/moodly?charset=utf8mb4'
+            CELERY_BROCKER_URL: 'redis://redis-server'
+            CELERY_RESULT_BACKEND: 'redis://redis-server'
+        command: celery worker -A celery_run:celery --loglevel=info
+        depends_on:
+            - redis
+
+    nginx:
+        image: nginx:latest
+        links:
+            - flask:host1
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx/hosts:/etc/nginx/conf.d
+            - ./nginx/www:/var/www
+            - ./nginx/logs:/var/log/nginx
+        depends_on:
+            - flask
